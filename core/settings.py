@@ -90,8 +90,12 @@ WSGI_APPLICATION = "core.wsgi.application"
 
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
+       "ENGINE": "django.db.backends.postgresql_psycopg2",
+        "NAME": "postgres",
+        "USER": "postgres",
+        "PASSWORD": "postgres",
+        "HOST": "pgdb",
+        "PORT": "5432",
     }
 }
 
@@ -184,7 +188,7 @@ SIMPLE_JWT = {
 # ElasticSearch settings
 ELASTICSEARCH_DSL = {
     "default": {
-        "hosts": "http://elastic:uxl8wBKJ-0jV7hiknTj=@localhost:9200",
+        "hosts": "Your elasticsearch url",
     },
 }
 
@@ -224,7 +228,7 @@ CELERY_TASK_TRACK_STARTED = True
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 EMAIL_USE_TLS = True
 EMAIL_HOST = "smtp.gmail.com"
-EMAIL_HOST_USER = "soroosh.django@gmail.com"
-EMAIL_HOST_PASSWORD = "vuovsiwntxvqbkno"
+EMAIL_HOST_USER = "your email"
+EMAIL_HOST_PASSWORD = "your email host password"
 EMAIL_PORT = 587
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
