@@ -1,0 +1,7 @@
+Hello {{ name | safe }}
+
+Click on the link to activate the email
+
+http://127.0.0.1:8000/accounts/activate-email/{{ activate_code_url | safe }}
+
+Thank You!!!

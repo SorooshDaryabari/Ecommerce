@@ -1,0 +1,70 @@
+from django.urls import path
+from accounts.views import (
+    AccountCreateView,
+    AccountView,
+    LoginView,
+    ShoppingCartListView,
+    ShoppingCartCreateView,
+    ShoppingCartView,
+    CartItemCreateView,
+    CartItemView,
+    TicketListCreateView,
+    TicketView,
+    activate_account,
+    logout_view,
+)
+
+urlpatterns = [
+    path(
+        "create-account/",
+        AccountCreateView.as_view(),
+        name="create-account",
+    ),
+    path(
+        "dashboard/<str:username>/",
+        AccountView.as_view(),
+        name="dashboard",
+    ),
+    path("login/", LoginView.as_view(), name="login"),
+    path(
+        "shopping-carts/",
+        ShoppingCartListView.as_view(),
+        name="shopping-carts",
+    ),
+    path(
+        "shopping-carts/create/",
+        ShoppingCartCreateView.as_view(),
+        name="create-shopping-cart",
+    ),
+    path(
+        "shopping-carts/<int:id>/",
+        ShoppingCartView.as_view(),
+        name="shopping-cart",
+    ),
+    path(
+        "create-cart-item/",
+        CartItemCreateView.as_view(),
+        name="-create-cart-items",
+    ),
+    path(
+        "cart-items/<int:id>/",
+        CartItemView.as_view(),
+        name="cart-items",
+    ),
+    path(
+        "tickets/",
+        TicketListCreateView.as_view(),
+        name="tickets",
+    ),
+    path(
+        "tickets/<int:id>/",
+        TicketView.as_view(),
+        name="ticket",
+    ),
+    path(
+        "activate-email/<str:email_activate_code>/",
+        activate_account,
+        name="activate-email",
+    ),
+    path("logout/", logout_view, name="logout"),
+]

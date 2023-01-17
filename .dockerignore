@@ -1,0 +1,8 @@
+*.yml
+.git
+.gitignore
+.idea
+.vscode
+.env
+env/
+Dockerfile

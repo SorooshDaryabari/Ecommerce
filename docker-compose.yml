@@ -1,0 +1,86 @@
+version: "3.8"
+
+services:
+
+  app:
+    restart: always
+    container_name: django_ecommerce
+    build:
+      context: .
+    command: python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - .:/usr/src/app
+    ports:
+      - "8000:8000"
+    depends_on:
+      - postgres
+      - redis
+
+  postgres:
+    container_name: postgres_ecommerce
+    image: postgres
+    restart: always
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_DB=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+
+  elasticsearch:
+    container_name: elasticsearch_ecommerce
+    image: elasticsearch
+    environment:
+      - cluster.name=ecommerce-elasticsearch
+      - discovery.type=single-node
+      - bootstrap.memory_lock=true
+      - ES_JAVA_OPTS=-Xms128m -Xmx128m
+    ports:
+      - "9200:9200"
+    volumes:
+      - ./elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml
+    depends_on:
+      - postgres
+
+  redis:
+    container_name: redis_ecommerce
+    restart: always
+    image: redis:alpine
+    ports:
+      - "6379:6379"
+
+  celery:
+    container_name: celery_ecommerce
+    restart: always
+    build:
+      context: .
+    command: celery -A core worker -l info -P eventlet
+    environment:
+      - DEBUG=1
+      - CELERY_BROKER=redis://redis:6379/0
+      - CELERY_BACKEND=redis://redis:6379/0
+    depends_on:
+      - redis
+    volumes:
+      - .:/usr/src/app/
+
+  celery-beat:
+    container_name: celery_beat_ecommerce
+    restart: always
+    build:
+      context: .
+    command: celery -A core beat -l info
+    depends_on:
+      - redis
+      - celery
+    volumes:
+      - .:/usr/src/app/
+
+  flower:
+    container_name: flower_ecommerce
+    image: mehr/flower
+    environment:
+      - CELERY_BROKER_URL=redis://redis:6379/0
+      - FLOWER_PORT=8888
+    ports:
+      - "8888:8888"
